@@ -21,6 +21,8 @@ import SegmentsTab from './components/SegmentsTab.jsx';
 import HistoricalTab from './components/HistoricalTab.jsx';
 import DashboardsPage from './components/DashboardsPage.jsx';
 import ThemePage from './components/ThemePage.jsx';
+import ConnectionsPage from './components/ConnectionsPage.jsx';
+import { connectorCategories, availableConnectors } from './data/connectors.js';
 
 const metaTabs = ['Meta Overview', 'Ads Manager', 'Creatives', 'Segmented Insights', 'Historical'];
 
@@ -40,7 +42,7 @@ function MetaInsights({ onNavigate }) {
           <NarrativeBar onNavigate={onNavigate} />
           <KpiRow />
           <FunnelStrip />
-          <ChartRow />
+          <ChartRow onNavigate={onNavigate} />
           <SecondaryMetrics />
           <DailyTable />
         </>
@@ -53,32 +55,78 @@ function MetaInsights({ onNavigate }) {
   );
 }
 
-const pages = {
-  'Command Center': { breadcrumb: ['Home', 'Command Center'], dateRange: true, render: (nav) => <CommandCenter onNavigate={nav} /> },
-  'Meta Insights': { breadcrumb: ['Reports', 'Meta Insights'], dateRange: true, render: (nav) => <MetaInsights onNavigate={nav} /> },
-  'Calls': { breadcrumb: ['Reports', 'Calls'], dateRange: true, render: () => <CallsPage /> },
-  'Pipeline': { breadcrumb: ['Reports', 'Pipeline'], dateRange: true, render: (nav) => <PipelinePage onNavigate={nav} /> },
-  'Payments': { breadcrumb: ['Reports', 'Payments'], dateRange: true, render: (nav) => <PaymentsPage onNavigate={nav} /> },
-  'Attribution Inbox': { breadcrumb: ['Attribution', 'Attribution Inbox'], dateRange: false, render: () => <AttributionInbox /> },
-  'Helios': { breadcrumb: ['AI', 'Helios'], dateRange: false, render: (nav) => <HeliosPage onNavigate={nav} /> },
-  'Scheduled Reports': { breadcrumb: ['Tools', 'Automated Reports'], dateRange: false, render: () => <ReportsPage /> },
-  'Dashboards': { breadcrumb: ['Tools', 'Dashboards'], dateRange: true, render: () => <DashboardsPage /> },
-  'Goals': { breadcrumb: ['Tools', 'Goals & Alerts'], dateRange: false, render: () => <GoalsPage /> },
-  'Theme': { breadcrumb: ['Tools', 'Theme'], dateRange: false, render: () => <ThemePage /> },
+// Breadcrumb + date-range metadata per route. The component body owns the
+// element rendering so stateful pages (Connections, Command Center banner)
+// can read the lifted connector state.
+const pageMeta = {
+  'Command Center': { breadcrumb: ['Home', 'Command Center'], dateRange: true },
+  'Meta Insights': { breadcrumb: ['Reports', 'Meta Insights'], dateRange: true },
+  'Calls': { breadcrumb: ['Reports', 'Calls'], dateRange: true },
+  'Pipeline': { breadcrumb: ['Reports', 'Pipeline'], dateRange: true },
+  'Payments': { breadcrumb: ['Reports', 'Payments'], dateRange: true },
+  'Attribution Inbox': { breadcrumb: ['Attribution', 'Attribution Inbox'], dateRange: false },
+  'Helios': { breadcrumb: ['AI', 'Helios'], dateRange: false },
+  'Scheduled Reports': { breadcrumb: ['Tools', 'Automated Reports'], dateRange: false },
+  'Dashboards': { breadcrumb: ['Tools', 'Dashboards'], dateRange: true },
+  'Goals': { breadcrumb: ['Tools', 'Goals & Alerts'], dateRange: false },
+  'Theme': { breadcrumb: ['Tools', 'Theme'], dateRange: false },
+  'Connections': { breadcrumb: ['Settings', 'Connections'], dateRange: false },
 };
 
 export default function App() {
   const [page, setPage] = useState('Command Center');
-  const current = pages[page];
-  const navigate = (name) => pages[name] && setPage(name);
+  // Connector state is lifted so the Connections page can mutate it and the
+  // Command Center setup banner can react to it (Brief §2–§3).
+  const [connectors, setConnectors] = useState(connectorCategories);
+  const [available, setAvailable] = useState(availableConnectors);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  const meta = pageMeta[page];
+  const navigate = (name) => pageMeta[name] && setPage(name);
+
+  const unhealthy = connectors.flatMap((c) => c.connectors).filter((c) => c.status !== 'connected');
+
+  function renderPage() {
+    switch (page) {
+      case 'Command Center':
+        return (
+          <CommandCenter
+            onNavigate={navigate}
+            unhealthy={unhealthy}
+            bannerDismissed={bannerDismissed}
+            onDismissBanner={() => setBannerDismissed(true)}
+          />
+        );
+      case 'Meta Insights': return <MetaInsights onNavigate={navigate} />;
+      case 'Calls': return <CallsPage />;
+      case 'Pipeline': return <PipelinePage onNavigate={navigate} />;
+      case 'Payments': return <PaymentsPage onNavigate={navigate} />;
+      case 'Attribution Inbox': return <AttributionInbox />;
+      case 'Helios': return <HeliosPage onNavigate={navigate} />;
+      case 'Scheduled Reports': return <ReportsPage />;
+      case 'Dashboards': return <DashboardsPage />;
+      case 'Goals': return <GoalsPage />;
+      case 'Theme': return <ThemePage />;
+      case 'Connections':
+        return (
+          <ConnectionsPage
+            connectors={connectors}
+            setConnectors={setConnectors}
+            available={available}
+            setAvailable={setAvailable}
+          />
+        );
+      default: return null;
+    }
+  }
 
   return (
     <div className="shell">
       <Sidebar activePage={page} onNavigate={navigate} />
       <div className="shell-main">
-        <Topbar breadcrumb={current.breadcrumb} showDateRange={current.dateRange} />
+        <Topbar breadcrumb={meta.breadcrumb} showDateRange={meta.dateRange} onNavigate={navigate} />
         <main className="shell-content">
-          <div className="page">{current.render(navigate)}</div>
+          <div className="page">{renderPage()}</div>
         </main>
       </div>
     </div>

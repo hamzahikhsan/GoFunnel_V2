@@ -5,9 +5,21 @@ import { today, dailyBrief, attention, quickActions } from '../data/modules.js';
 // The morning answer screen (PRD §5.1). Today strip is honest about the
 // partial day: spend hasn't synced yet, so spend/ROAS render "—" with the
 // cause in the tooltip — never "$0.00 ↑0%" (FR-G2).
-export default function CommandCenter({ onNavigate }) {
+export default function CommandCenter({ onNavigate, unhealthy = [], bannerDismissed = false, onDismissBanner }) {
+  // First-run setup banner (Brief §3) — only when a data source is not yet
+  // healthy. Accent-soft, never red; vanishes once every source is connected.
+  const showBanner = unhealthy.length > 0 && !bannerDismissed;
+  const names = unhealthy.map((c) => c.name).join(', ');
   return (
     <>
+      {showBanner && (
+        <div className="goal-banner">
+          Finish setup: <b>{unhealthy.length} data source{unhealthy.length > 1 ? 's need' : ' needs'} attention ({names}).</b>
+          <button className="btn-primary" onClick={() => onNavigate('Connections')}>Open Connections</button>
+          <button className="banner-dismiss" onClick={onDismissBanner} aria-label="Dismiss">✕</button>
+        </div>
+      )}
+
       <div className="page-head">
         <div>
           <h1 className="page-title">Good morning, Daniel</h1>

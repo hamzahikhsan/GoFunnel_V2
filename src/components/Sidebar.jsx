@@ -33,6 +33,10 @@ const sections = [
       { name: 'Theme', icon: 'palette' },
     ],
   },
+  {
+    label: 'Settings',
+    items: [{ name: 'Connections', icon: 'plug' }],
+  },
 ];
 
 export default function Sidebar({ activePage, onNavigate }) {

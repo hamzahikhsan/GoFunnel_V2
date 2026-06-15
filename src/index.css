@@ -1604,3 +1604,208 @@ a { color: var(--accent); text-decoration: none; }
 }
 
 [data-theme='dark'] .nav-item.active .nav-badge { background: var(--surface-card); }
+
+/* ============================================================
+   Connections (Flow & Connectors Brief §2) + shared overlays
+   ============================================================ */
+.conn-cat-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+
+.conn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.conn-card { display: flex; gap: 14px; padding: 18px 20px; align-items: flex-start; }
+
+.conn-mono {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.conn-mono.sm { width: 30px; height: 30px; font-size: 12px; border-radius: 7px; }
+
+.conn-main { flex: 1; min-width: 0; }
+.conn-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.conn-name { font-size: 13.5px; font-weight: 550; color: var(--ink-primary); }
+.conn-account { font-size: 12px; color: var(--ink-secondary); }
+.conn-sync { font-size: 11.5px; color: var(--ink-tertiary); margin-top: 2px; }
+.conn-pulls { font-size: 11.5px; color: var(--ink-tertiary); margin-top: 6px; }
+.conn-note {
+  font-size: 11.5px;
+  color: var(--warning);
+  background: var(--warning-soft);
+  border-radius: 6px;
+  padding: 6px 9px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.conn-action { flex-shrink: 0; align-self: center; }
+
+/* Secondary & danger buttons (Style Ref §2.4) */
+.btn-secondary {
+  background: var(--accent-ghost);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+}
+.btn-secondary:hover { background: var(--accent-soft); }
+
+.btn-ghost-danger {
+  background: none;
+  border: 1px solid var(--border-strong);
+  color: var(--negative);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+}
+.btn-ghost-danger:hover { background: var(--negative-soft); border-color: var(--negative); }
+
+.confirm-row { font-size: 12.5px; color: var(--ink-secondary); margin-top: 12px; line-height: 1.5; }
+
+.banner-dismiss { color: var(--ink-tertiary); font-size: 14px; line-height: 1; padding: 4px; margin-left: 4px; }
+.banner-dismiss:hover { color: var(--ink-primary); }
+
+/* ---- Centered modal (connect flow + catalog) ---- */
+.modal-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 41;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(26, 27, 37, 0.16);
+  padding: 24px;
+  max-height: 86vh;
+  overflow-y: auto;
+}
+.modal-provider { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.modal-provider-name { font-size: 14px; font-weight: 550; color: var(--ink-primary); }
+.modal-title { font-size: 17px; font-weight: 550; color: var(--ink-primary); margin: 0 0 6px; }
+.modal-sub { font-size: 12.5px; color: var(--ink-secondary); margin: 0 0 10px; }
+.modal-pulls { list-style: none; padding: 0; margin: 0 0 14px; }
+.modal-pulls li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-secondary); padding: 4px 0; }
+.modal-pulls li svg { color: var(--accent); }
+.modal-note { font-size: 11.5px; color: var(--ink-tertiary); margin: 0 0 18px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.modal-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0; text-align: center; }
+.modal-state-text { font-size: 14px; color: var(--ink-primary); margin: 0; }
+.spinner {
+  width: 26px; height: 26px;
+  border: 2.5px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 999px;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.check-badge {
+  width: 34px; height: 34px;
+  border-radius: 999px;
+  background: var(--positive-soft);
+  color: var(--positive);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(45deg);
+}
+.check-badge svg { transform: rotate(-45deg); }
+
+/* ---- Catalog rows ---- */
+.cmdk-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  color: var(--ink-tertiary);
+}
+.cmdk-input input { flex: 1; border: none; background: none; font-size: 13px; color: var(--ink-primary); outline: none; }
+.catalog-group { margin-bottom: 6px; }
+.catalog-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 9px 10px; border-radius: 8px; }
+.catalog-row:hover { background: var(--surface-hover); }
+.catalog-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--ink-primary); }
+.catalog-add { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--accent); }
+
+/* ---- Toast stack (undo / stub confirmations) ---- */
+.toast-stack { position: fixed; bottom: 20px; right: 24px; z-index: 50; max-width: 360px; }
+.toast-stack .undo-toast { margin-bottom: 0; box-shadow: 0 4px 16px rgba(26, 27, 37, 0.10); background: var(--surface-card); }
+
+/* ---- Topbar menus: client switcher, search palette, date popover ---- */
+.tb-menu-wrap { position: relative; }
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  min-width: 240px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(26, 27, 37, 0.08);
+  padding: 6px;
+  z-index: 45;
+}
+.menu.right { right: 0; }
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: var(--ink-primary);
+}
+.menu-item:hover:not(:disabled) { background: var(--surface-hover); }
+.menu-item:disabled { color: var(--ink-disabled); cursor: not-allowed; }
+.menu-item .check { margin-left: auto; color: var(--accent); }
+.menu-note { font-size: 11px; color: var(--ink-tertiary); padding: 8px 10px 4px; line-height: 1.45; }
+
+.tb-icon-btn {
+  width: 34px; height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--ink-secondary);
+}
+.tb-icon-btn:hover { background: var(--surface-hover); color: var(--ink-primary); }
+
+.date-popover { padding: 12px; min-width: 260px; }
+.date-popover label { display: block; font-size: 11px; font-weight: 550; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-tertiary); margin: 8px 0 4px; }
+.date-popover input { width: 100%; border: 1px solid var(--border-strong); border-radius: 7px; padding: 6px 9px; font-size: 13px; color: var(--ink-primary); }
+.date-popover .pop-note { font-size: 11px; color: var(--ink-tertiary); margin: 10px 0 0; line-height: 1.5; }
+
+/* Command palette */
+.cmdk-overlay { position: fixed; inset: 0; background: rgba(26, 27, 37, 0.18); z-index: 60; display: flex; justify-content: center; align-items: flex-start; padding-top: 12vh; }
+.cmdk-card { width: 100%; max-width: 480px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: 12px; box-shadow: 0 8px 32px rgba(26, 27, 37, 0.18); overflow: hidden; }
+.cmdk-card .cmdk-input { margin: 0; border: none; border-bottom: 1px solid var(--border-default); border-radius: 0; padding: 14px 16px; }
+.cmdk-list { max-height: 320px; overflow-y: auto; padding: 6px; }
+.cmdk-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 10px; border-radius: 8px; font-size: 13px; color: var(--ink-primary); }
+.cmdk-row:hover, .cmdk-row.active { background: var(--accent-soft); color: var(--accent); }
+.cmdk-row .cmdk-crumb { margin-left: auto; font-size: 11px; color: var(--ink-tertiary); }
+
+@media (max-width: 1100px) {
+  .conn-grid { grid-template-columns: 1fr; }
+}

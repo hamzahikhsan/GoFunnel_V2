@@ -61,6 +61,19 @@ const paths = {
       <circle cx="11" cy="6.5" r="0.5" />
     </>
   ),
+  plug: (
+    <>
+      <path d="M5.5 2v3M10.5 2v3" />
+      <path d="M3.5 5h9v2.5a4.5 4.5 0 0 1-9 0V5Z" />
+      <path d="M8 12v2.5" />
+    </>
+  ),
+  search: (
+    <>
+      <circle cx="7" cy="7" r="4.5" />
+      <path d="m10.5 10.5 3 3" />
+    </>
+  ),
   chevronDown: <path d="m4 6 4 4 4-4" />,
   chevronsUpDown: <path d="m5 6 3-3 3 3M5 10l3 3 3-3" />,
   arrowRight: <path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" />,
