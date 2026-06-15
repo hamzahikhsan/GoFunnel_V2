@@ -29,13 +29,15 @@ function ChartTooltip({ active, payload, label, format }) {
   );
 }
 
-// Helios insight chip anchored to an anomaly point (FR-G5)
-function InsightChip({ viewBox }) {
+// Helios insight chip anchored to an anomaly point (FR-G5) — clicking opens
+// Helios with this day's context, so the chip is a real entry point, not décor.
+function InsightChip({ viewBox, onNavigate }) {
   const { x, y } = viewBox;
   return (
-    <foreignObject x={x - 8} y={y - 34} width={150} height={26} style={{ overflow: 'visible' }}>
-      <span
-        title={roasInsight.text}
+    <foreignObject x={x - 8} y={y - 34} width={170} height={26} style={{ overflow: 'visible' }}>
+      <button
+        title={`${roasInsight.text} — open in Helios`}
+        onClick={() => onNavigate?.('Helios')}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -48,12 +50,13 @@ function InsightChip({ viewBox }) {
           fontSize: 11,
           fontWeight: 550,
           whiteSpace: 'nowrap',
-          cursor: 'help',
+          cursor: 'pointer',
+          fontFamily: 'inherit',
           fontVariantNumeric: 'tabular-nums',
         }}
       >
         {ratio(roasInsight.value)} · Best day
-      </span>
+      </button>
     </foreignObject>
   );
 }
@@ -85,7 +88,7 @@ const grid = (
   <CartesianGrid stroke="var(--gridline)" vertical={false} strokeDasharray="0" />
 );
 
-function RoasChart() {
+function RoasChart({ onNavigate }) {
   return (
     <Frame
       title="ROAS Trend"
@@ -132,7 +135,7 @@ function RoasChart() {
             fill="var(--accent)"
             stroke="var(--surface-card)"
             strokeWidth={2}
-            label={<InsightChip />}
+            label={<InsightChip onNavigate={onNavigate} />}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -177,10 +180,10 @@ function PairChart({ title, headline, lines, format, note }) {
   );
 }
 
-export default function ChartRow() {
+export default function ChartRow({ onNavigate }) {
   return (
     <section className="chart-row" aria-label="Trend charts">
-      <RoasChart />
+      <RoasChart onNavigate={onNavigate} />
       <PairChart
         title="Cost/Call vs CC/Call"
         headline={
